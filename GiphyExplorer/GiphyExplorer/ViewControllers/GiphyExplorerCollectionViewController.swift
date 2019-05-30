@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 private let reuseIdentifier = "GiphyCollectionViewCelll"
 
@@ -27,9 +28,16 @@ class GiphyExplorerCollectionViewController: UICollectionViewController {
         // Do any additional setup after loading the view.
         searchController.isActive = true
         searchController.searchResultsUpdater = self
+        searchController.delegate = self
+        searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search Giphy"
         navigationItem.searchController = searchController
-        searchController.becomeFirstResponder()
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        searchController.searchBar.becomeFirstResponder()
     }
 
     // MARK: UICollectionViewDataSource
@@ -48,14 +56,20 @@ class GiphyExplorerCollectionViewController: UICollectionViewController {
         if let cell = cell as? GiphyCollectionViewCelll {
             let giphy = searchResults[indexPath.row]
             cell.imageView.sd_setImage(with: giphy.url)
+            cell.imageView.backgroundColor = .red
         }
     
         return cell
     }
     
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+//        let shoudLoadNextPage
+    }
+    
     func search(for text: String?) {
         if let text = text,
             !text.isEmpty {
+            SDWebImageManager.shared.cancelAll()
             NetworkManager.shared.search(giphy: text, page: 0) { (results, error) in
                 if let error = error {
                     self.searchResults = []
@@ -66,13 +80,24 @@ class GiphyExplorerCollectionViewController: UICollectionViewController {
                 self.collectionView.reloadData()
             }
         } else {
-            searchResults = []
+//            searchResults = []
         }
         collectionView.reloadData()
     }
 }
 
-extension GiphyExplorerCollectionViewController: UISearchResultsUpdating {
+extension GiphyExplorerCollectionViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = (collectionView.frame.width - 20) / 2
+        return CGSize.init(width: width, height: width)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets.init(top: 10, left: 5, bottom: 10, right: 5)
+    }
+}
+
+extension GiphyExplorerCollectionViewController: UISearchResultsUpdating, UISearchControllerDelegate {
     func updateSearchResults(for searchController: UISearchController) {
         search(for: searchController.searchBar.text)
     }

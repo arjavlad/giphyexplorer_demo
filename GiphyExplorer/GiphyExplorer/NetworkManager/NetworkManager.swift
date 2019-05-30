@@ -16,13 +16,14 @@ class NetworkManager {
                  addAPIKey: Bool = true,
                  _ completion: @escaping (GiphyResponse?, Error?) -> ()) {
         var urlComps = URLComponents.init(url: GiphyBaseURL.appendingPathComponent(path), resolvingAgainstBaseURL: false)
+        var queryItems = [URLQueryItem]()
         for (key, value) in params {
-            urlComps?.queryItems?.append(URLQueryItem.init(name: key, value: "\(value)"))
+            queryItems.append(URLQueryItem.init(name: key, value: "\(value)"))
         }
         if addAPIKey {
-            urlComps?.queryItems?.append(URLQueryItem.init(name: "api_key", value: GiphyApiKey))
+            queryItems.append(URLQueryItem.init(name: "api_key", value: GiphyApiKey))
         }
-        
+        urlComps?.queryItems = queryItems
         guard let fullURL = urlComps?.url else {
             completion(nil, NSError.init(domain: "com.app.urlinvalid",
                                          code: 422,
@@ -37,6 +38,7 @@ class NetworkManager {
         print("Calling API: \(fullURL.absoluteString)")
         let request = URLRequest.init(url: fullURL, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 20)
         let session = URLSession.shared
+        session.invalidateAndCancel()
         session.dataTask(with: request) { (responseData, response, requestError) in
             print("call complete for: \(fullURL.absoluteString)")
             print("++++++++++++++++++++++++++++++++++++++++")
@@ -58,6 +60,7 @@ class NetworkManager {
 extension NetworkManager {
     func search(giphy keyword: String, page: Int, _ completion: @escaping ([Giphy], Error?) -> ()) {
         let params: [String : Any] = [
+            "q": keyword,
             "limit": 20,
             "offset": page,
             "rating": "G",

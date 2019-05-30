@@ -23,12 +23,12 @@ struct Giphy: Codable {
     let title: String
     private let images: GiphyOriginalImageData
     var url: URL {
-        return images.original.url
+        return images.fixed_height_small.url
     }
 }
 
 fileprivate struct GiphyOriginalImageData: Codable {
-    let original: GiphyImageURL
+    let fixed_height_small: GiphyImageURL
 }
 
 fileprivate struct GiphyImageURL: Codable {

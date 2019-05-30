@@ -29,7 +29,7 @@
         <scene sceneID="rhM-V9-fjF">
             <objects>
                 <collectionViewController storyboardIdentifier="GiphyExplorerCollectionViewController" id="l1e-h4-bH9" customClass="GiphyExplorerCollectionViewController" customModule="GiphyExplorer" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" keyboardDismissMode="onDrag" dataMode="prototypes" id="NSo-eI-2Is">
+                    <collectionView key="view" clipsSubviews="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" keyboardDismissMode="onDrag" dataMode="prototypes" id="NSo-eI-2Is">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
