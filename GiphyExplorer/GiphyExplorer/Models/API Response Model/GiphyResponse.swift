@@ -20,7 +20,7 @@ struct GiphyResponsePagination: Codable {
         case count = "count"
         case offset = "offset"
     }
-    let totalCount: Double
+    let totalCount: Int
     let count: Int
     let offset: Int
 }

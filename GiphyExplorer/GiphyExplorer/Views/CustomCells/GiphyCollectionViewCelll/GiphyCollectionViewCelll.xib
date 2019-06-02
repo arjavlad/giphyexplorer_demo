@@ -22,9 +22,15 @@
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ewk-Om-8oj" customClass="FLAnimatedImageView">
                         <rect key="frame" x="0.0" y="44" width="106" height="30"/>
                     </imageView>
+                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="o7A-Ij-U8O">
+                        <rect key="frame" x="43" y="49" width="20" height="20"/>
+                        <color key="color" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </activityIndicatorView>
                 </subviews>
             </view>
             <constraints>
+                <constraint firstItem="o7A-Ij-U8O" firstAttribute="centerY" secondItem="ZTg-uK-7eu" secondAttribute="centerY" id="1bt-F1-RnM"/>
+                <constraint firstItem="o7A-Ij-U8O" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="AH1-uG-IjF"/>
                 <constraint firstItem="ewk-Om-8oj" firstAttribute="trailing" secondItem="ZTg-uK-7eu" secondAttribute="trailing" id="Aoy-4I-873"/>
                 <constraint firstItem="ZTg-uK-7eu" firstAttribute="leading" secondItem="ewk-Om-8oj" secondAttribute="leading" id="dl7-Bp-xTT"/>
                 <constraint firstItem="ewk-Om-8oj" firstAttribute="bottom" secondItem="ZTg-uK-7eu" secondAttribute="bottom" id="njh-Od-LyR"/>
@@ -33,6 +39,7 @@
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="106" height="108"/>
             <connections>
+                <outlet property="activityIndicatorView" destination="o7A-Ij-U8O" id="Ae6-QN-ssH"/>
                 <outlet property="imageView" destination="ewk-Om-8oj" id="U21-lk-6Pe"/>
             </connections>
             <point key="canvasLocation" x="-343.47826086956525" y="87.723214285714278"/>

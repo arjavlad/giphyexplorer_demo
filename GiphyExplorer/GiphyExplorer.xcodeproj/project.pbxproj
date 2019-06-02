@@ -19,8 +19,10 @@
 		599A9BFC22A0069600B7D203 /* GiphyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599A9BFB22A0069600B7D203 /* GiphyResponse.swift */; };
 		599A9C0122A0109E00B7D203 /* GiphyResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 599A9C0022A0101200B7D203 /* GiphyResponse.json */; };
 		599A9C0222A0109F00B7D203 /* GiphyResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 599A9C0022A0101200B7D203 /* GiphyResponse.json */; };
-		599A9C0522A0110400B7D203 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599A9C0422A0110400B7D203 /* NetworkManager.swift */; };
+		599A9C0522A0110400B7D203 /* NetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599A9C0422A0110400B7D203 /* NetworkHelper.swift */; };
 		599A9C0722A0117400B7D203 /* GiphyConfigs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599A9C0622A0117400B7D203 /* GiphyConfigs.swift */; };
+		599A9C0922A29F5500B7D203 /* GiphySearchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599A9C0822A29F5500B7D203 /* GiphySearchRequest.swift */; };
+		599A9C0B22A2A10E00B7D203 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599A9C0A22A2A10E00B7D203 /* Result.swift */; };
 		75FB668A25B2C53535148281 /* Pods_GiphyExplorerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8523B796A2339B62820A9D2D /* Pods_GiphyExplorerTests.framework */; };
 		7BB85255B6B56D13A1442DE5 /* Pods_GiphyExplorer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D7329373046373AC879E95 /* Pods_GiphyExplorer.framework */; };
 /* End PBXBuildFile section */
@@ -53,8 +55,10 @@
 		599A9BF922A005D200B7D203 /* Giphy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Giphy.swift; sourceTree = "<group>"; };
 		599A9BFB22A0069600B7D203 /* GiphyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyResponse.swift; sourceTree = "<group>"; };
 		599A9C0022A0101200B7D203 /* GiphyResponse.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GiphyResponse.json; sourceTree = "<group>"; };
-		599A9C0422A0110400B7D203 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		599A9C0422A0110400B7D203 /* NetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHelper.swift; sourceTree = "<group>"; };
 		599A9C0622A0117400B7D203 /* GiphyConfigs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyConfigs.swift; sourceTree = "<group>"; };
+		599A9C0822A29F5500B7D203 /* GiphySearchRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphySearchRequest.swift; sourceTree = "<group>"; };
+		599A9C0A22A2A10E00B7D203 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		8523B796A2339B62820A9D2D /* Pods_GiphyExplorerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GiphyExplorerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B89727EC85202D09F10DD950 /* Pods-GiphyExplorer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GiphyExplorer.debug.xcconfig"; path = "Target Support Files/Pods-GiphyExplorer/Pods-GiphyExplorer.debug.xcconfig"; sourceTree = "<group>"; };
 		E20D05B1F668382C80E433CE /* Pods-GiphyExplorer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GiphyExplorer.release.xcconfig"; path = "Target Support Files/Pods-GiphyExplorer/Pods-GiphyExplorer.release.xcconfig"; sourceTree = "<group>"; };
@@ -104,7 +108,7 @@
 		599A9BC8229FF81000B7D203 /* GiphyExplorer */ = {
 			isa = PBXGroup;
 			children = (
-				599A9C0322A010ED00B7D203 /* NetworkManager */,
+				599A9C0322A010ED00B7D203 /* NetworkHelper */,
 				599A9C0022A0101200B7D203 /* GiphyResponse.json */,
 				599A9BC9229FF81000B7D203 /* AppDelegate.swift */,
 				599A9BD0229FF81100B7D203 /* Assets.xcassets */,
@@ -185,13 +189,15 @@
 			path = "User Models";
 			sourceTree = "<group>";
 		};
-		599A9C0322A010ED00B7D203 /* NetworkManager */ = {
+		599A9C0322A010ED00B7D203 /* NetworkHelper */ = {
 			isa = PBXGroup;
 			children = (
-				599A9C0422A0110400B7D203 /* NetworkManager.swift */,
+				599A9C0422A0110400B7D203 /* NetworkHelper.swift */,
 				599A9C0622A0117400B7D203 /* GiphyConfigs.swift */,
+				599A9C0A22A2A10E00B7D203 /* Result.swift */,
+				599A9C0822A29F5500B7D203 /* GiphySearchRequest.swift */,
 			);
-			path = NetworkManager;
+			path = NetworkHelper;
 			sourceTree = "<group>";
 		};
 		7486EC00D7BAC30AC99BC757 /* Pods */ = {
@@ -394,9 +400,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				599A9C0522A0110400B7D203 /* NetworkManager.swift in Sources */,
+				599A9C0B22A2A10E00B7D203 /* Result.swift in Sources */,
+				599A9C0522A0110400B7D203 /* NetworkHelper.swift in Sources */,
 				599A9BCA229FF81000B7D203 /* AppDelegate.swift in Sources */,
 				599A9BFC22A0069600B7D203 /* GiphyResponse.swift in Sources */,
+				599A9C0922A29F5500B7D203 /* GiphySearchRequest.swift in Sources */,
 				599A9BF522A0049C00B7D203 /* GiphyCollectionViewCelll.swift in Sources */,
 				599A9BF0229FFCF700B7D203 /* GiphyExplorerCollectionViewController.swift in Sources */,
 				599A9C0722A0117400B7D203 /* GiphyConfigs.swift in Sources */,

@@ -11,10 +11,21 @@ import SDWebImage
 
 private let reuseIdentifier = "GiphyCollectionViewCelll"
 
-class GiphyExplorerCollectionViewController: UICollectionViewController {
+class GiphyExplorerCollectionViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching {
     
     let searchController = UISearchController.init(searchResultsController: nil)
     var searchResults: [Giphy] = []
+    var currentPage: Int = 0
+    let maxPage = 1
+    var searchKeyword: String {
+        let text = searchController.searchBar.text ?? "iOS"
+        return text.isEmpty ? "ios" : text
+    }
+    var totalCount: Int = 0
+    var currentCount: Int {
+        return searchResults.count
+    }
+    var isLoadingData: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +35,8 @@ class GiphyExplorerCollectionViewController: UICollectionViewController {
 
         // Register cell classes
         self.collectionView.register(UINib.init(nibName: "GiphyCollectionViewCelll", bundle: nil), forCellWithReuseIdentifier: reuseIdentifier)
-
+        self.collectionView.prefetchDataSource = self
+        
         // Do any additional setup after loading the view.
         searchController.isActive = true
         searchController.searchResultsUpdater = self
@@ -33,6 +45,8 @@ class GiphyExplorerCollectionViewController: UICollectionViewController {
         searchController.searchBar.placeholder = "Search Giphy"
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
+        
+        search(for: searchKeyword, on: currentPage)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -47,42 +61,66 @@ class GiphyExplorerCollectionViewController: UICollectionViewController {
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return searchResults.count
+        return totalCount
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
         
         if let cell = cell as? GiphyCollectionViewCelll {
-            let giphy = searchResults[indexPath.row]
-            cell.imageView.sd_setImage(with: giphy.url)
-            cell.imageView.backgroundColor = .red
+            if !isLoadingCell(for: indexPath) {
+                cell.configure(with: searchResults[indexPath.row])
+            } else {
+                cell.configure(with: nil)
+            }
         }
-    
+        
         return cell
     }
     
-    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        let shoudLoadNextPage
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        if indexPaths.contains(where: isLoadingCell) {
+            loadNextPage()
+        }
     }
     
-    func search(for text: String?) {
-        if let text = text,
-            !text.isEmpty {
-            SDWebImageManager.shared.cancelAll()
-            NetworkManager.shared.search(giphy: text, page: 0) { (results, error) in
-                if let error = error {
-                    self.searchResults = []
-                    print("Found Error while searching: \(error.localizedDescription)")
-                } else {
-                    self.searchResults = results
-                }
-                self.collectionView.reloadData()
-            }
-        } else {
-//            searchResults = []
+    func isLoadingCell(for indexPath: IndexPath) -> Bool {
+        return indexPath.item >= currentCount
+    }
+    
+    func indexPathsToReload(_ indexPaths: [IndexPath]) -> [IndexPath] {
+        let visibleIndexPaths = collectionView.indexPathsForVisibleItems
+        let indexPathsToReload = Set(visibleIndexPaths).intersection(indexPaths)
+        return Array(indexPathsToReload)
+    }
+    
+    func loadNextPage() {
+        
+        // We have to set  max pag limittation due to Giphy API's limit for Dev environment
+        let nextpage = currentPage < maxPage ? currentPage + 1 : currentPage
+        print("Current page: \(currentPage)")
+        print("Next page: \(nextpage)")
+        search(for: searchKeyword, on: nextpage)
+    }
+    
+    func search(for text: String, on page: Int) {
+        if isLoadingData {
+            return
         }
-        collectionView.reloadData()
+        isLoadingData = true
+//        NetworkManager.shared.search(giphy: text, page: page) { (results, totalCount, error) in
+//            print("Loaded for page: \(page)")
+//            self.isLoadingData = false
+//            if let error = error {
+//                print("Found Error while searching: \(error.localizedDescription)")
+//            } else {
+//                self.totalCount = totalCount
+//                self.currentPage = page
+//                self.searchResults.append(contentsOf: results)
+//                print("Total count: \(totalCount)")
+//            }
+//            self.collectionView.reloadData()
+//        }
     }
 }
 
@@ -99,7 +137,9 @@ extension GiphyExplorerCollectionViewController: UICollectionViewDelegateFlowLay
 
 extension GiphyExplorerCollectionViewController: UISearchResultsUpdating, UISearchControllerDelegate {
     func updateSearchResults(for searchController: UISearchController) {
-        search(for: searchController.searchBar.text)
+        currentPage = 0
+        SDWebImageManager.shared.cancelAll()
+        search(for: searchKeyword, on: currentPage)
     }
     
 }
