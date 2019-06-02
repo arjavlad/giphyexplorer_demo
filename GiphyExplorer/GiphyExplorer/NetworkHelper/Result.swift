@@ -16,6 +16,7 @@ enum Result<T, E: Error> {
 enum GiphyResponseError: Error {
     case decode
     case network
+    case custom(String)
     
     var description: String {
         switch self {
@@ -23,6 +24,9 @@ enum GiphyResponseError: Error {
             return "Data received but was in incorect format."
         case .network:
             return "There some network connection error."
+            
+        case .custom(let str):
+            return str
         }
     }
 }

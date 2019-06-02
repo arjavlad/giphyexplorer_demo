@@ -11,28 +11,36 @@ import Foundation
 struct GiphySearchRequest: NetworkRequest {
     var path: String = "search"
     let query: String
-    let page: Int
-    
     var params: [String: String] {
         return [
             "q": query,
             "limit": "20",
-            "offset": "\(page + 20)",
             "rating": "G",
             "lang": "en"
         ]
+    }
+    
+    init(with query: String) {
+        self.query = query
     }
 }
 
 struct GiphySearchClient {
     let session: URLSession
     
-    func fetch(with request: GiphySearchRequest, _ completion: @escaping (Result<GiphyResponse, GiphyResponseError>) -> ()) {
-        guard let callRequest = NetworkHelper.prepareGET(request: request) else {
+    init(with session: URLSession = URLSession.shared) {
+        self.session = session
+    }
+    
+    func fetch(with request: GiphySearchRequest, page: Int, _ completion: @escaping (Result<GiphyResponse, GiphyResponseError>) -> ()) {
+        let offset = page < 1 ? page : page + 20
+        let pageParam = ["offset": "\(offset)"]
+        guard let callRequest = NetworkHelper.prepareGET(request: request, with: pageParam) else {
             completion(Result.failure(.network))
             assertionFailure()
             return
         }
+        print("Searching for \(request.query) on page \(page)")
         print("++++++++++++++++++++++++++++++++++++++++")
         print("Calling API: \(String(describing: callRequest.url?.absoluteString))")
         session.dataTask(with: callRequest) { (responseData, response, requestError) in
@@ -43,14 +51,20 @@ struct GiphySearchClient {
                     let decoder = JSONDecoder.init()
                     do {
                         let decodedResponse = try decoder.decode(GiphyResponse.self, from: responseData)
+                        print("Loaded: \(decodedResponse.data.count) Giphy")
                         completion(Result.success(decodedResponse))
                     } catch {
                         print("Decoding Error: \(error.localizedDescription)")
-                        completion(Result.failure(GiphyResponseError.decode))
+                        let rawString = String.init(data: responseData, encoding: .utf8)
+                        print("Raw response for: \(String(describing: response?.url?.absoluteString))")
+                        print("+++========================+++++++++++++++++++++==============================+++++++++++++++++++++")
+                        print(rawString ?? "nil")
+                        print("+++========================+++++++++++++++++++++==============================+++++++++++++++++++++")
+                        completion(Result.failure(.decode))
                     }
                 } else {
                     print("Netowork Error: \(requestError?.localizedDescription ?? "not found")")
-                    completion(Result.failure(GiphyResponseError.network))
+                    completion(Result.failure(.network))
                 }
             }
             }.resume()

@@ -14,13 +14,19 @@ protocol NetworkRequest {
 }
 
 struct NetworkHelper {
-    static func prepareGET(request: NetworkRequest) -> URLRequest? {
+    static func prepareGET(request: NetworkRequest, with additionalParam: [String: String]? = nil) -> URLRequest? {
         var urlComps = URLComponents.init(url: GiphyBaseURL.appendingPathComponent(request.path), resolvingAgainstBaseURL: false)
         var queryItems = [URLQueryItem]()
-        for (key, value) in request.params {
+        var params = request.params
+        if let otherParams = additionalParam {
+            otherParams.forEach { (key, value) in
+                params[key] = value
+            }
+        }
+        params["api_key"] = GiphyApiKey
+        params.forEach { (key, value) in
             queryItems.append(URLQueryItem.init(name: key, value: value))
         }
-        queryItems.append(URLQueryItem.init(name: "api_key", value: GiphyApiKey))
         urlComps?.queryItems = queryItems
         guard let fullURL = urlComps?.url else {
             assertionFailure()

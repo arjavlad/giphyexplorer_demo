@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Giphy: Codable {
+struct Giphy: Codable, Hashable {
     private enum CodingKeys: String, CodingKey {
         case type = "type"
         case id = "id"
@@ -24,6 +24,14 @@ struct Giphy: Codable {
     private let images: GiphyOriginalImageData
     var url: URL {
         return images.fixed_height_small.url
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: Giphy, rhs: Giphy) -> Bool {
+        return lhs.id == rhs.id
     }
 }
 

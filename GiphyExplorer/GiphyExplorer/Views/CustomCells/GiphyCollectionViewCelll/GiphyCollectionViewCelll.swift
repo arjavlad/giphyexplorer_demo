@@ -19,11 +19,15 @@ class GiphyCollectionViewCelll: UICollectionViewCell {
         // Initialization code
     }
     
+    
+    /// Configures the cell with Giphy, if nil is passed then sets the placeholder image
+    ///
+    /// - Parameter giphy: Giphy
     func configure(with giphy: Giphy?) {
         if let giphy = giphy {
             activityIndicatorView.isHidden = true
             activityIndicatorView.stopAnimating()
-            imageView.sd_setImage(with: giphy.url)
+            imageView.sd_setImage(with: giphy.url, placeholderImage: #imageLiteral(resourceName: "placeHolderImage"), options: .continueInBackground, context: nil)
         } else {
             imageView.image = #imageLiteral(resourceName: "placeHolderImage")
             activityIndicatorView.isHidden = false
