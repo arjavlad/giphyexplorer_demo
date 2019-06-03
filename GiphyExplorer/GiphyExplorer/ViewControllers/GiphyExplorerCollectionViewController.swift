@@ -9,9 +9,10 @@
 import UIKit
 import SDWebImage
 
-private let reuseIdentifier = "GiphyCollectionViewCelll"
+private let reuseIdentifier = "GiphyCollectionViewCell"
+private let GiphyCollectionViewCell_XIB_Name = "GiphyCollectionViewCell"
 
-class GiphyExplorerCollectionViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching {
+final class GiphyExplorerCollectionViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching {
     
     private let searchController = UISearchController.init(searchResultsController: nil)
     private var viewModel: GiphySearchViewModel!
@@ -21,11 +22,11 @@ class GiphyExplorerCollectionViewController: UICollectionViewController, UIColle
         super.viewDidLoad()
         
         // Uncomment the following line to preserve selection between presentations
-        self.clearsSelectionOnViewWillAppear = true
+        clearsSelectionOnViewWillAppear = true
         
         // Register cell classes
-        self.collectionView.register(UINib.init(nibName: "GiphyCollectionViewCelll", bundle: nil), forCellWithReuseIdentifier: reuseIdentifier)
-        self.collectionView.prefetchDataSource = self
+        collectionView.register(UINib.init(nibName: GiphyCollectionViewCell_XIB_Name, bundle: nil), forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.prefetchDataSource = self
         
         // Do any additional setup after loading the view.
         viewModel = GiphySearchViewModel.init(with: GiphySearchRequest.init(with: ""), delegate: self)
@@ -49,16 +50,12 @@ class GiphyExplorerCollectionViewController: UICollectionViewController, UIColle
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-        
-        if let cell = cell as? GiphyCollectionViewCelll {
-            if isLoadingCell(for: indexPath) {
-                cell.configure(with: nil)
-            } else {
-                cell.configure(with: viewModel.giphy(at: indexPath.item))
-            }
+        guard let giphyCell = cell as? GiphyCollectionViewCell else {
+            return cell
         }
-        
-        return cell
+        let giphy = isLoadingCell(for: indexPath) ? nil : viewModel.giphy(at: indexPath.item)
+        giphyCell.configure(with: giphy)
+        return giphyCell
     }
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
@@ -66,7 +63,6 @@ class GiphyExplorerCollectionViewController: UICollectionViewController, UIColle
             viewModel.fetchGiphy()
         }
     }
-    
     
     /// Setup SearchController and SearchBar
     func setupSearchBar() {
@@ -141,12 +137,10 @@ extension GiphyExplorerCollectionViewController: GiphySearchViewModelDelegate {
     }
     
     func giphyFetchFailed(with error: String) {
+        // TODO: Move these strings at the top of the file
         let alertController = UIAlertController.init(title: "Error!", message: error, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction.init(title: "OK", style: .default, handler: { (_) in
-            
-        }))
-        
-        self.present(alertController, animated: true, completion: nil)
+        alertController.addAction(UIAlertAction.init(title: "OK", style: .default, handler: nil))
+        present(alertController, animated: true, completion: nil)
     }
 }
 

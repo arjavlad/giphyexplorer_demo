@@ -53,7 +53,6 @@ final class GiphySearchViewModel {
         delegate.giphyLoaded(for: .none)
     }
     
-    
     /// Fetches Giphy with text query
     func fetchGiphy() {
         if isLoadingData {
@@ -87,7 +86,6 @@ final class GiphySearchViewModel {
         let endIndex = startIndex + newGiphy.count
         return (startIndex..<endIndex).map { IndexPath.init(item: $0, section: 0) }
     }
-    
     
     /// This is not useful in anyway in the production mode. This is for debugging and finding if there are any dulicate Giphy in new response.
     ///

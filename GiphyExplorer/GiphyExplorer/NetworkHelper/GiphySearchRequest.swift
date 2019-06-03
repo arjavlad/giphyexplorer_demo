@@ -47,24 +47,24 @@ struct GiphySearchClient {
             print("call complete for: \(String(describing: callRequest.url?.absoluteString))")
             print("++++++++++++++++++++++++++++++++++++++++")
             DispatchQueue.main.async {
-                if let responseData = responseData {
-                    let decoder = JSONDecoder.init()
-                    do {
-                        let decodedResponse = try decoder.decode(GiphyResponse.self, from: responseData)
-                        print("Loaded: \(decodedResponse.data.count) Giphy")
-                        completion(Result.success(decodedResponse))
-                    } catch {
-                        print("Decoding Error: \(error.localizedDescription)")
-                        let rawString = String.init(data: responseData, encoding: .utf8)
-                        print("Raw response for: \(String(describing: response?.url?.absoluteString))")
-                        print("+++========================+++++++++++++++++++++==============================+++++++++++++++++++++")
-                        print(rawString ?? "nil")
-                        print("+++========================+++++++++++++++++++++==============================+++++++++++++++++++++")
-                        completion(Result.failure(.decode))
-                    }
-                } else {
-                    print("Netowork Error: \(requestError?.localizedDescription ?? "not found")")
+                guard let responseData = responseData else {
+                    print("Network Error: \(requestError?.localizedDescription ?? "not found")")
                     completion(Result.failure(.network))
+                    return
+                }
+                let decoder = JSONDecoder.init()
+                do {
+                    let decodedResponse = try decoder.decode(GiphyResponse.self, from: responseData)
+                    print("Loaded: \(decodedResponse.data.count) Giphy")
+                    completion(Result.success(decodedResponse))
+                } catch {
+                    print("Decoding Error: \(error.localizedDescription)")
+                    let rawString = String.init(data: responseData, encoding: .utf8)
+                    print("Raw response for: \(String(describing: response?.url?.absoluteString))")
+                    print("+++========================+++++++++++++++++++++==============================+++++++++++++++++++++")
+                    print(rawString ?? "nil")
+                    print("+++========================+++++++++++++++++++++==============================+++++++++++++++++++++")
+                    completion(Result.failure(.decode))
                 }
             }
             }.resume()

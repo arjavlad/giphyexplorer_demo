@@ -17,8 +17,7 @@ struct GiphyResponse: Codable {
 struct GiphyResponsePagination: Codable {
     private enum CodingKeys: String, CodingKey {
         case totalCount = "total_count"
-        case count = "count"
-        case offset = "offset"
+        case count, offset
     }
     let totalCount: Int
     let count: Int
@@ -27,7 +26,7 @@ struct GiphyResponsePagination: Codable {
 
 struct GiphyResponseMeta: Codable {
     private enum CodingKeys: String, CodingKey {
-        case status = "status"
+        case status
         case message = "msg"
         case responseID = "response_id"
     }
